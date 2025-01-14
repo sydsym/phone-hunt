@@ -66,6 +66,29 @@
           id="phone-container"
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
         ></div>
+        <!-- modal -->
+        <dialog id="showDetailsModal" class="modal rouned-lg shadow-sm">
+          <div class="modal-box">
+            <div class="flex justify-center">
+              <span
+                id="modalSpinner"
+                class="loading loading-bars loading-lg m-auto hidden"
+              ></span>
+            </div>
+            <div id="phone-details"></div>
+            <div class="modal-action">
+              <form method="dialog">
+                <button class="btn btn-error text-white">Close</button>
+              </form>
+            </div>
+          </div>
+        </dialog>
+        <!-- show all button  -->
+        <div class="text-center">
+          <button id="showall-btn" class="btn btn-primary my-5 hidden">
+            Show All
+          </button>
+        </div>
       </section>
     </main>
     <footer
