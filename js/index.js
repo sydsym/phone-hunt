@@ -1,32 +1,22 @@
 const searchBtn = document.getElementById("search-btn");
+const phoneContainer = document.getElementById("phone-container");
 
-const toggleSpinner = (isLoading) => {
-  if (isLoading) {
-    document.getElementById("spinner").classList.remove("hidden");
-  } else {
-    document.getElementById("spinner").classList.add("hidden");
-  }
-};
-
-const handleSearch = async () => {
-  toggleSpinner(true);
-  const searchText = document.getElementById("search-box").value;
-  const response = await fetch(
-    `https://openapi.programming-hero.com/api/phones?search=${searchText}`
-  );
-  const json = await response.json();
-  const data = json.data;
+const showPhone = (phones) => {
   let filtered;
 
-  if (data.length > 12) {
-    filtered = data.splice(0, 12);
-  } else {
-    filtered = data;
+  if (!phones.length) {
+    phoneContainer.innerHTML += `<p class="text-red-500 text-center col-span-3 text-xl mb-5">No results found with your keywords or Network Error. Try Again...!!</p>`;
+    toggleSpinner(false);
+    return;
   }
-  const phoneContainer = document.getElementById("phone-container");
+  if (phones.length > 12) {
+    filtered = phones.splice(0, 12);
+  } else {
+    filtered = phones;
+  }
 
   filtered.forEach((phone) => {
-    phoneContainer.innerHTML += `
+    const showPhone = `
         <div class="border-gray-400 rounded-xl shadow-md p-5 text-center space-y-3" >
             <img
               src="${phone.image}"
@@ -42,8 +32,37 @@ const handleSearch = async () => {
             <button class="btn btn-primary">Show Details</button>
         </div>
     `;
+    phoneContainer.innerHTML += showPhone;
   });
+};
+
+const toggleSpinner = (isLoading) => {
+  if (isLoading) {
+    document.getElementById("spinner").classList.remove("hidden");
+  } else {
+    document.getElementById("spinner").classList.add("hidden");
+  }
+};
+
+const loadData = (data) => {
+  const phones = data.data;
   toggleSpinner(false);
+  showPhone(phones);
+};
+
+const fetchData = async (searchText) => {
+  const response = await fetch(
+    `https://openapi.programming-hero.com/api/phones?search=${searchText}`
+  );
+  const data = await response.json();
+  loadData(data);
+};
+
+const handleSearch = () => {
+  phoneContainer.textContent = "";
+  toggleSpinner(true);
+  const searchText = document.getElementById("search-box").value;
+  fetchData(searchText);
 };
 
 searchBtn.addEventListener("click", handleSearch);
